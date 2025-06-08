@@ -1,6 +1,6 @@
 function CheckKey()
-    if getgenv().8GQ2ZNLT5X then
-        getgenv().8GQ2ZNLT5X = nil
+    if getgenv()["8GQ2ZNLT5X"] then
+        getgenv()["8GQ2ZNLT5X"] = nil
         return true
     else
         return false
@@ -12,5 +12,5 @@ print("Running Baseplate.lua")
 if CheckKey() then
     print("Premium License")
 else
-    print("Standard License
+    print("Standard License")
 end
