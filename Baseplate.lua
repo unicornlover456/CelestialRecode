@@ -33,8 +33,16 @@ end
 
 print("Running Baseplate.lua")
 
-if isPremiumUser(game.Players.LocalPlayer.UserId, game.PlaceId) then
-    print("User is PREMIUM!")
+local success, resultOrError = pcall(function()
+    return isPremiumUser(game.Players.LocalPlayer.UserId, game.PlaceId)
+end)
+
+if success then
+    if resultOrError then
+        print("User is PREMIUM!")
+    else
+        print("User is NOT premium.")
+    end
 else
-    print("User is NOT premium.")
+    warn("Error running isPremiumUser:", resultOrError)
 end
