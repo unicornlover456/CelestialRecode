@@ -1,34 +1,47 @@
 function isPremiumUser(playerId, placeId)
-    local HttpService = game:GetService("HttpService")
-    local function deobfuscateKey(str)
-        local raw = HttpService:UrlDecode(str)
-        local filtered = {}
-        for i = 1, #raw, 4 do
-            table.insert(filtered, raw:sub(i, i))
+    local function deobfuscateKey(mixed)
+        local placeIdChars = {}
+        local userIdChars = {}
+
+        for i = 1, #mixed do
+            local c = mixed:sub(i, i)
+            if i % 2 == 1 then
+                -- odd index: placeId char first, then userId char
+                if #placeIdChars < math.ceil(#mixed / 2) then
+                    table.insert(placeIdChars, c)
+                else
+                    table.insert(userIdChars, c)
+                end
+            else
+                -- even index: userId char first, then placeId char
+                if #userIdChars < math.floor(#mixed / 2) then
+                    table.insert(userIdChars, c)
+                else
+                    table.insert(placeIdChars, c)
+                end
+            end
         end
-        return table.concat(filtered)
+
+        local decodedPlaceId = table.concat(placeIdChars)
+        local decodedUserId = table.concat(userIdChars)
+        return decodedPlaceId, decodedUserId
     end
+
+    local playerIdStr = tostring(playerId)
+    local placeIdStr = tostring(placeId)
 
     for k, v in pairs(_G) do
         if typeof(k) == "string" and k:sub(1, 2) == "p_" and v == true then
-            local encoded = deobfuscateKey(k:sub(3))
-            local expected = placeId .. "_" .. playerId
-            local match = true
-            for i = 1, #expected do
-                local expectedByte = expected:sub(i, i):byte()
-                local encodedByte = encoded:sub(i, i):byte()
-                local decodedChar = (encodedByte - 17 - (i % 5)) % 126
-                if decodedChar ~= expectedByte then
-                    match = false
-                    break
-                end
-            end
-            if match then
+            local mixedKey = k:sub(3)
+            local decodedPlaceId, decodedUserId = deobfuscateKey(mixedKey)
+
+            if decodedPlaceId == placeIdStr and decodedUserId == playerIdStr then
                 _G[k] = nil
                 return true
             end
         end
     end
+
     return false
 end
 
