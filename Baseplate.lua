@@ -1,4 +1,5 @@
 function isPremiumUser(playerId, placeId)
+    local HttpService = game:GetService("HttpService")
     local function deobfuscateKey(str)
         local raw = HttpService:UrlDecode(str)
         local filtered = {}
