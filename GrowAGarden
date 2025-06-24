@@ -1,0 +1,22 @@
+function showCenteredMessage(text)
+    local CoreGui = game:GetService("CoreGui")
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.ResetOnSpawn = false
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.Parent = CoreGui
+
+    local label = Instance.new("TextLabel")
+    label.AnchorPoint = Vector2.new(0.5, 0.5)
+    label.Position = UDim2.new(0.5, 0, 0.5, 0)
+    label.Size = UDim2.new(0.7, 0, 0.2, 0)
+    label.BackgroundTransparency = 1
+    label.TextScaled = true
+    label.Text = text
+    label.ZIndex = 1000
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.Parent = screenGui
+end
+
+local scrambled = {"g","n","i","r","e","g"}
+
+showCenteredMessage(table.concat({scrambled[3], scrambled[1], scrambled[6], scrambled[2], scrambled[5], scrambled[4]}))
